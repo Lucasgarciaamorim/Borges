@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="pnlPrincipal" prefHeight="400.0" prefWidth="600.0"
+      stylesheets="@view/css/Style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.borges.controller.BorgesController">
+    <SplitPane fx:id="pnlSplitPlane" focusTraversable="true" orientation="VERTICAL" prefHeight="400.0"
+               prefWidth="600.0" VBox.vgrow="ALWAYS">
+        <AnchorPane fx:id="pnlTopPart" prefHeight="350.0" prefWidth="704.0">
+            <TextField fx:id="txtName" layoutX="85.0" layoutY="85.0" prefHeight="27.0" prefWidth="174.0"
+                       promptText="Seu Nome">
+                <cursor>
+                    <Cursor fx:constant="TEXT"/>
+                </cursor>
+            </TextField>
+            <DatePicker fx:id="dtDatePickerEmissao" layoutX="85.0" layoutY="130.0">
+                <cursor>
+                    <Cursor fx:constant="HAND"/>
+                </cursor>
+            </DatePicker>
+            <DatePicker fx:id="dtDatePicker" accessibleRole="IMAGE_VIEW" layoutX="361.0" layoutY="130.0">
+                <cursor>
+                    <Cursor fx:constant="HAND"/>
+                </cursor>
+            </DatePicker>
+            <ComboBox fx:id="cbLoja" layoutX="84.0" layoutY="172.0" prefHeight="27.0" prefWidth="176.0"
+                      promptText="     Selecione a Loja" AnchorPane.bottomAnchor="196.0"
+                      AnchorPane.leftAnchor="84.0">
+                <cursor>
+                    <Cursor fx:constant="HAND"/>
+                </cursor>
+            </ComboBox>
+            <ComboBox fx:id="cbMarca" layoutX="361.0" layoutY="172.0" prefHeight="27.0" prefWidth="176.0"
+                      promptText="Selecione a marca" AnchorPane.bottomAnchor="196.0"
+                      AnchorPane.leftAnchor="361.0">
+                <cursor>
+                    <Cursor fx:constant="HAND"/>
+                </cursor>
+            </ComboBox>
+            <TextField fx:id="txtChaveDanfe" alignment="CENTER" focusTraversable="false" layoutX="89.0"
+                       layoutY="220.0" prefHeight="12.0" prefWidth="428.0" promptText="digite a chave danfe"
+                       AnchorPane.leftAnchor="85.0" AnchorPane.topAnchor="219.0">
+                <font>
+                    <Font size="15.0"/>
+                </font>
+                <cursor>
+                    <Cursor fx:constant="TEXT"/>
+                </cursor>
+            </TextField>
+            <CheckBox fx:id="checkDanfe" layoutX="81.0" layoutY="258.0" mnemonicParsing="false"
+                      prefHeight="10.0" prefWidth="10.0" textFill="#9f9f9f" AnchorPane.leftAnchor="84.0"
+                      AnchorPane.topAnchor="253.0"/>
+            <Button id="confirmar" fx:id="btnConfirm" layoutX="248.0" layoutY="304.0" mnemonicParsing="false"
+                    onAction="#confirmEnvio" prefHeight="28.0" prefWidth="105.0" styleClass="Confirmar"
+                    stylesheets="@view/css/Style.css" text="Enviar" AnchorPane.bottomAnchor="66.0">
+                <cursor>
+                    <Cursor fx:constant="HAND"/>
+                </cursor>
+            </Button>
+            <Button fx:id="btnClear" layoutX="132.0" layoutY="304.0" mnemonicParsing="false" prefHeight="28.0"
+                    prefWidth="105.0" styleClass="Limpar" stylesheets="@view/css/Style.css" text="Limpar"
+                    AnchorPane.bottomAnchor="66.0" AnchorPane.leftAnchor="132.0"/>
+            <ImageView fitHeight="401.0" fitWidth="708.0" layoutX="-2.0" layoutY="-2.0" pickOnBounds="true"
+                       preserveRatio="true" style="-fx-view-order: 999;">
+                <image>
+                    <Image url="@view/images/backgroundImages.jpg"/>
+                </image>
+            </ImageView>
+        </AnchorPane>
+    </SplitPane>
+</VBox>
