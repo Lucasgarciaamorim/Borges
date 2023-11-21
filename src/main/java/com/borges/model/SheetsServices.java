@@ -30,7 +30,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 
-import static com.borges.controller.BorgesController.incrementAndReturnID;
+import static com.borges.controller.NfeController.incrementAndReturnID;
 
 
 @SuppressWarnings("ALL")

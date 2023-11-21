@@ -27,7 +27,7 @@ import java.util.Optional;
 import static com.borges.model.SheetsServices.adicionarDadosFixos;
 
 @SuppressWarnings("OptionalGetWithoutIsPresent")
-public class BorgesController extends BorgesApplication {
+public class NfeController extends BorgesApplication {
 
 
     private final SheetsServices sheetsServices;
@@ -114,7 +114,7 @@ public class BorgesController extends BorgesApplication {
     private TextField txtChaveDanfe;
 
 
-    public BorgesController() {
+    public NfeController() {
         sheetsServices = new SheetsServices();
     }
 
@@ -184,7 +184,7 @@ public class BorgesController extends BorgesApplication {
                 return;
             }
 
-            String Name = txtName.getText().trim();
+            String Name = txtName.getText().trim().toUpperCase();
             if (Name.isEmpty()) {
                 exibirAlerta("Erro", "Nome em branco. Por favor, insira um nome.", Alert.AlertType.ERROR);
                 return;
@@ -223,6 +223,7 @@ public class BorgesController extends BorgesApplication {
                 txtChaveDanfe.clear();
                 txtChaveDanfe.requestFocus();
 
+
                 exibirAlerta("Nota enviada", "Os dados foram enviados com sucesso!", Alert.AlertType.INFORMATION);
             } else {
                 exibirAlerta("Nota não enviada", "Não foi possível extrair os dados da NFe. Verifique a chave da NFe e tente novamente.", Alert.AlertType.ERROR);
@@ -254,7 +255,7 @@ public class BorgesController extends BorgesApplication {
 
         ObservableList<String> marcaOptions = FXCollections.observableArrayList(
                 "ACTIVITA", "ADDAN", "AKAZZO", "AKAZZO(NEFESH)", "BEIRA RIO", "BLITZZ",
-                "BOTINHO", "BOX", "CARTAGO", "GRENDENE", "HOST", "IZALU", "KANXA", "LICITTO",
+                "BOTINHO", "BOX", "CARTAGO", "FILA", "GRENDENE", "HOST", "IZALU", "KANXA", "LICITTO",
                 "LOOK FASHION", "MENDII", "MISSISIPI", "MIZUNO", "MODA LEVE", "MODARE", "MOLECA",
                 "MOLEKINHA", "MRS ATACADO", "NEFESH", "OLYMPIKUS - VULCABRAS", "ONITY",
                 "OPEN", "ORTOBESSA", "PARTHENON", "PEGADA", "PLUMAX", "POLO ENERGY",
