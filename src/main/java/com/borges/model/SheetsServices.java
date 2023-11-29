@@ -1,5 +1,11 @@
 package com.borges.model;
 
+import java.awt.Desktop;
+import java.net.URI;
+
+import com.borges.controller.LoginController;
+
+
 import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
 import com.google.api.client.auth.oauth2.Credential;
 
@@ -17,8 +23,12 @@ import com.google.api.services.sheets.v4.model.*;
 
 
 import com.google.api.services.sheets.v4.model.ValueRange;
+import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 
 
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -43,7 +53,7 @@ public class SheetsServices {
     private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
 
 
-    private static Credential authorize(final NetHttpTransport HTTP_TRANSPORT) throws IOException, GeneralSecurityException {
+    public Credential authorize(final NetHttpTransport HTTP_TRANSPORT) throws IOException, GeneralSecurityException{
 
         InputStream in = SheetsServices.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
         if (in == null) {
@@ -55,7 +65,7 @@ public class SheetsServices {
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
                 HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
                 .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(TOKENS_DIRECTORY_PATH)))
-                .setAccessType("offline")  // Use "offline" to get refresh tokens
+                .setAccessType("offline")
                 .build();
 
 
@@ -69,13 +79,16 @@ public class SheetsServices {
             return credential;
         }
 
-
         AuthorizationCodeRequestUrl authorizationUrl = flow.newAuthorizationUrl();
         String redirectUri = "urn:ietf:wg:oauth:2.0:oob";
         String url = authorizationUrl.setRedirectUri(redirectUri).build();
-        System.out.println("Please open the following URL in your browser then type the authorization code:");
-        System.out.println("  " + url);
+        try {
+            URI link = new URI(url);
+            Desktop.getDesktop().browse(link);
 
+        } catch (Exception erro) {
+            System.out.println("ERRO");
+        }
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("Digite o email");
@@ -84,16 +97,15 @@ public class SheetsServices {
         System.out.println("Enter the authorization code:");
         String code = scanner.nextLine();
 
-
         GoogleTokenResponse response = flow.newTokenRequest(code).setRedirectUri(redirectUri).execute();
-
 
         return flow.createAndStoreCredential(response, "user");
 
     }
 
 
-    public static void main(String... args) throws IOException, GeneralSecurityException {
+
+    public static void main(String... args) throws Exception {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
 
         SheetsServices sheetsServices = new SheetsServices();

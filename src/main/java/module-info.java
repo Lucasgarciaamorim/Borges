@@ -8,6 +8,7 @@ module com.borges.borges {
     requires com.google.api.client.json.gson;
     requires com.google.api.services.sheets;
     requires com.google.api.client.extensions.java6.auth;
+     requires java.desktop;
 
 
     opens com.borges to javafx.fxml;

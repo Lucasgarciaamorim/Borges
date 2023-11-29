@@ -31,7 +31,7 @@ public class NfeController extends BorgesApplication {
 
 
     private final SheetsServices sheetsServices;
-    public Label lblConfirDanfe;
+
 
     @FXML
     private ComboBox<String> cbLoja;
@@ -153,15 +153,20 @@ public class NfeController extends BorgesApplication {
         }
         return false;
     }
+    Sheets service = null;
+
+
+    public void autenticationAuth() throws GeneralSecurityException, IOException {
+        NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+        service = sheetsServices.getSheetsService(httpTransport);
+    }
 
 
     @FXML
     void confirmEnvio(ActionEvent event) {
-        Sheets service = null;
-        try {
-            NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
 
-            service = sheetsServices.getSheetsService(httpTransport);
+        try {
+            autenticationAuth();
             String spreadsheetId = sheetsServices.getSpreadsheetId();
 
             String chaveNFe = txtChaveDanfe.getText();

@@ -6,11 +6,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import com.borges.controller.NfeController;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.util.Objects;
 
 public class BorgesApplication extends Application {
+
     private static Stage stage;
 
     private static Scene loginScene;
@@ -39,7 +41,7 @@ public class BorgesApplication extends Application {
         });
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         launch(args);
     }
 
