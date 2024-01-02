@@ -5,16 +5,22 @@ import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.ValueRange;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -28,91 +34,25 @@ import static com.borges.model.SheetsServices.adicionarDadosFixos;
 
 @SuppressWarnings("OptionalGetWithoutIsPresent")
 public class NfeController extends BorgesApplication {
-
-
     private final SheetsServices sheetsServices;
-
-
     @FXML
     private ComboBox<String> cbLoja;
-
     @FXML
     private DatePicker dtDatePicker;
-
-
     @FXML
     private DatePicker dtDatePickerEmissao;
-
     @FXML
     private TextField txtName;
-
-    @FXML
-    private VBox pnlPrincipal;
-
-    @FXML
-    private AnchorPane AncherBottom;
-
-    @FXML
-    private Button btnClear;
-
-
-    @FXML
-    private Button btnConfirm;
-
-    @FXML
-    private Label lblDetailLoja;
-    @FXML
-    private Label lblDetailDataEmissao;
-    @FXML
-    private Label lblDetailNumberNota;
-
-    @FXML
-    private Label lblName;
-
-
-    @FXML
-    private AnchorPane pnlTopPart;
-
-    @FXML
-    private Label lblDetailCnpjFornecedor;
-
-    @FXML
-    private Label lblDetailChaveDanfe;
-
-    @FXML
-    private Label lblDetailNotaFiscal;
-
-    @FXML
-    private Label lblLoja;
-
-    @FXML
-    private Label lblChaveDanfe;
-
-    @FXML
-    private Label lblDate;
-
-    @FXML
-    private SplitPane pnlSplitPlane;
-
-    @FXML
-    private Label lblMarca;
-
     @FXML
     private ComboBox<String> cbMarca;
-
-
-    @FXML
-    private Font x1;
-
-    @FXML
-    private HBox pnlBottom;
-
-    @FXML
-    private CheckBox checkDanfe;
-
     @FXML
     private TextField txtChaveDanfe;
-
+    @FXML
+    private Button btnClear;
+    @FXML
+    private TextField txtAuthentic;
+    @FXML
+    private Button enviar;
 
     public NfeController() {
         sheetsServices = new SheetsServices();
@@ -122,11 +62,9 @@ public class NfeController extends BorgesApplication {
         if (chave.length() != 44) {
             return false;
         }
-
         if (!chave.matches("\\d+")) {
             return false;
         }
-
         int digitoVerificador = Integer.parseInt(chave.substring(43));
         String chaveSemDigito = chave.substring(0, 43);
 
@@ -153,8 +91,8 @@ public class NfeController extends BorgesApplication {
         }
         return false;
     }
-    Sheets service = null;
 
+    Sheets service = null;
 
     public void autenticationAuth() throws GeneralSecurityException, IOException {
         NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
@@ -162,11 +100,53 @@ public class NfeController extends BorgesApplication {
     }
 
 
+    //    @FXML
+//    public void txtAuthenticOnAction(ActionEvent event) {
+//
+//    }
+    @FXML
+    public void enviarOnAction(ActionEvent event) {
+        String txtAutentic = txtAuthentic.getText();
+
+    }
+
+    @FXML
+    void loginOnAction(ActionEvent event) {
+        try {
+            autenticationAuth();
+        } catch (IOException e) {
+            System.out.println("Alerta");
+
+        } catch (GeneralSecurityException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private AuthorizationDialogController openAuthorizationDialog(Stage stage) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/borges/AuthorizationDialog.fxml"));
+        Stage dialogStage = new Stage();
+        Parent root = loader.load();
+        dialogStage.initModality(Modality.WINDOW_MODAL);
+        dialogStage.initOwner(stage);
+        dialogStage.setTitle("Authorization Dialog");
+
+        Scene scene = new Scene(root);
+        dialogStage.setScene(scene);
+
+        AuthorizationDialogController controller = loader.getController();
+        controller.setDialogStage(dialogStage);
+
+        dialogStage.showAndWait();
+
+        return controller;
+    }
+
     @FXML
     void confirmEnvio(ActionEvent event) {
 
         try {
             autenticationAuth();
+
             String spreadsheetId = sheetsServices.getSpreadsheetId();
 
             String chaveNFe = txtChaveDanfe.getText();
@@ -233,9 +213,22 @@ public class NfeController extends BorgesApplication {
             } else {
                 exibirAlerta("Nota não enviada", "Não foi possível extrair os dados da NFe. Verifique a chave da NFe e tente novamente.", Alert.AlertType.ERROR);
             }
-        } catch (IOException | GeneralSecurityException e) {
+        } catch (IOException e) {
             exibirAlerta("Erro", "Ocorreu um erro ao enviar a nota: " + e.getMessage(), Alert.AlertType.ERROR);
+        } catch (GeneralSecurityException e) {
+            throw new RuntimeException(e);
         }
+    }
+
+    @FXML
+    void clearOnAction(ActionEvent event) {
+        txtName.clear();
+        txtChaveDanfe.clear();
+        cbLoja.setValue(null);
+        cbMarca.setValue(null);
+        dtDatePickerEmissao.setValue(null);
+        dtDatePicker.setValue(null);
+
     }
 
     private void exibirAlerta(String title, String message, Alert.AlertType alertType) {
@@ -265,7 +258,7 @@ public class NfeController extends BorgesApplication {
                 "MOLEKINHA", "MRS ATACADO", "NEFESH", "OLYMPIKUS - VULCABRAS", "ONITY",
                 "OPEN", "ORTOBESSA", "PARTHENON", "PEGADA", "PLUMAX", "POLO ENERGY",
                 "RAYON", "REED", "SELENE", "SERENITY", "STAR CHIC", "TOOPER", "VIA VIP",
-                "VIVANZ", "VIZZANO", "VULCABRAS");
+                "VIVANZ", "VIZZANO", "VULCABRAS", "NÃO LISTADO");
 
         cbMarca.setItems(marcaOptions);
 
@@ -278,11 +271,7 @@ public class NfeController extends BorgesApplication {
                 "019 - LOJA 322", "020 - LOJA 391"
         );
         cbLoja.setItems((lojaOptions));
-
-
     }
-
-
     public static boolean onCloseQuery() {
         Alert alerta = new Alert(Alert.AlertType.CONFIRMATION);
         alerta.setTitle("Exit");

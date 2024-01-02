@@ -3,8 +3,6 @@ package com.borges.model;
 import java.awt.Desktop;
 import java.net.URI;
 
-import com.borges.controller.LoginController;
-
 
 import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
 import com.google.api.client.auth.oauth2.Credential;
@@ -23,17 +21,11 @@ import com.google.api.services.sheets.v4.model.*;
 
 
 import com.google.api.services.sheets.v4.model.ValueRange;
-import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
+import javafx.scene.control.TextInputDialog;
 
 
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.security.GeneralSecurityException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,6 +38,7 @@ import static com.borges.controller.NfeController.incrementAndReturnID;
 @SuppressWarnings("ALL")
 public class SheetsServices {
 
+
     private static final String APPLICATION_NAME = "Google Sheets API Java Quickstart";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
@@ -53,14 +46,12 @@ public class SheetsServices {
     private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
 
 
-    public Credential authorize(final NetHttpTransport HTTP_TRANSPORT) throws IOException, GeneralSecurityException{
-
+    public Credential authorize(final NetHttpTransport HTTP_TRANSPORT) throws IOException, GeneralSecurityException {
         InputStream in = SheetsServices.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
         if (in == null) {
             throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
         }
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
-
 
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
                 HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
@@ -68,12 +59,9 @@ public class SheetsServices {
                 .setAccessType("offline")
                 .build();
 
-
         Credential credential = flow.loadCredential("user");
         if (credential != null && (credential.getAccessToken() != null || credential.getRefreshToken() != null)) {
-
             if (credential.getExpiresInSeconds() != null && credential.getExpiresInSeconds() < 60) {
-
                 credential.refreshToken();
             }
             return credential;
@@ -85,24 +73,40 @@ public class SheetsServices {
         try {
             URI link = new URI(url);
             Desktop.getDesktop().browse(link);
-
         } catch (Exception erro) {
             System.out.println("ERRO");
         }
-
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Digite o email");
-        String email = scanner.nextLine();
-
-        System.out.println("Enter the authorization code:");
-        String code = scanner.nextLine();
-
-        GoogleTokenResponse response = flow.newTokenRequest(code).setRedirectUri(redirectUri).execute();
-
-        return flow.createAndStoreCredential(response, "user");
-
+        openAuthorizationDialog(flow, redirectUri);
+        return credential;
     }
 
+    public Credential openAuthorizationDialog(GoogleAuthorizationCodeFlow flow, String redirectUri) {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Authorization");
+        dialog.setHeaderText("Digite o email e código de autorização");
+        dialog.setContentText("Email:");
+
+
+
+
+        TextInputDialog dialogCode = new TextInputDialog();
+        dialogCode.setTitle("Authorization");
+        dialogCode.setHeaderText("Digite o email e código de autorização");
+        dialogCode.setContentText("Código de Autorização:");
+
+
+        Optional<String> resultCode = dialogCode.showAndWait();
+        String code = resultCode.orElse("");
+
+        try {
+
+            GoogleTokenResponse response = flow.newTokenRequest(code).setRedirectUri(redirectUri).execute();
+            return flow.createAndStoreCredential(response, "user");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 
     public static void main(String... args) throws Exception {

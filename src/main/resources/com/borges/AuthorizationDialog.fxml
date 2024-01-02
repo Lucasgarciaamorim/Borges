@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="150.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.borges.controller.AuthorizationDialogController">
+    <VBox spacing="10" layoutX="30" layoutY="20">
+        <Label text="Digite o email:"/>
+        <TextField fx:id="emailTextField"/>
+        <Label text="Digite o código de autorização:"/>
+        <TextField fx:id="codeTextField"/>
+        <Button text="Confirmar" onAction="#confirmAction"/>
+    </VBox>
+</AnchorPane>

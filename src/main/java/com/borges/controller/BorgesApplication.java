@@ -29,7 +29,7 @@ public class BorgesApplication extends Application {
         Parent fxmlNfe = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/borges/BorgesView.fxml")));
         nfeScene = new Scene(fxmlNfe, 700, 400);
 
-        primaryStage.setScene(loginScene);
+        primaryStage.setScene(nfeScene);
         primaryStage.show();
 
         stage.setOnCloseRequest(e -> {
@@ -53,48 +53,7 @@ public class BorgesApplication extends Application {
             case "nfe":
                 stage.setScene(nfeScene);
                 break;
-            // adicione outros casos conforme necessário
         }
     }
 }
 
-
-//    private Scene createSplashScene(Stage stage) {
-//        Image logo = new Image(Objects.requireNonNull(getClass().getResource("/Images/logo.jpg")).toExternalForm());
-//        ImageView logoView = new ImageView(logo);
-//        StackPane root = new StackPane(logoView);
-//        Scene splashScene = new Scene(root, 400, 200);
-//
-//        Task<Void> initializationTask = new Task<>() {
-//            @Override
-//            protected Void call() {
-//                return null;
-//            }
-//        };
-//
-//        initializationTask.setOnSucceeded(event -> Platform.runLater(() -> loadMainScene(stage)));
-//
-//        new Thread(initializationTask).start();
-//
-//        return splashScene;
-//    }
-//
-//    private void loadMainScene(Stage stage) {
-//        try {
-//            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/borges/BorgesView.fxml"));
-//            Scene scene = new Scene(fxmlLoader.load());
-//
-//            stage.setScene(scene);
-//            stage.setTitle("Envio de Nota Fiscal");
-//            stage.resizableProperty().setValue(Boolean.FALSE);
-//
-//            stage.setOnCloseRequest(e -> {
-//                if (NfeController.onCloseQuery()) {
-//                    System.exit(0);
-//                } else {
-//                    e.consume();
-//                }
-//            });
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
