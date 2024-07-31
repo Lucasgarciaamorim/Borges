@@ -43,7 +43,7 @@ public class SheetsServices {
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
     private static final List<String> SCOPES = Collections.singletonList(SheetsScopes.SPREADSHEETS);
-    private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
+    private static final String CREDENTIALS_FILE_PATH = "/credentials2.json";
 
 
     public Credential authorize(final NetHttpTransport HTTP_TRANSPORT) throws IOException, GeneralSecurityException {
@@ -61,9 +61,10 @@ public class SheetsServices {
 
         Credential credential = flow.loadCredential("user");
         if (credential != null && (credential.getAccessToken() != null || credential.getRefreshToken() != null)) {
-            if (credential.getExpiresInSeconds() != null && credential.getExpiresInSeconds() < 60) {
+            if (credential.getExpiresInSeconds() != null && credential.getExpiresInSeconds() < 30) {
                 credential.refreshToken();
             }
+
             return credential;
         }
 
@@ -91,7 +92,7 @@ public class SheetsServices {
 
         TextInputDialog dialogCode = new TextInputDialog();
         dialogCode.setTitle("Authorization");
-        dialogCode.setHeaderText("Digite o email e código de autorização");
+        dialogCode.setHeaderText("Digite o código de autorização");
         dialogCode.setContentText("Código de Autorização:");
 
 
